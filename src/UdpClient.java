@@ -7,22 +7,29 @@ import java.net.*;
 public class UdpClient {
     public static void main(String args[]) throws Exception{
 
-        BufferedReader userChoiseOfNameServer =
-                new BufferedReader(new InputStreamReader(System.in));
-        DatagramSocket clientSocket = new DatagramSocket();
-        InetAddress nameServerIP = InetAddress.getByName("itchy.umu.se");
+        DatagramSocket clientSocket = null;
+        int port = 1337;
 
-        byte[] sendConnectRequest = new byte[1024];
-        byte[] receiveAnswer = new byte[1024];
+        BufferedReader userChoise = new BufferedReader(new InputStreamReader(System.in));
 
-        String sentence = userChoiseOfNameServer.readLine();
-        sendConnectRequest = sentence.getBytes();
-        DatagramPacket reqPacket = new DatagramPacket
-                (sendConnectRequest, sendConnectRequest.length, nameServerIP, 1337);
-        clientSocket.send(reqPacket);
-        DatagramPacket receivePacket = new DatagramPacket(receiveAnswer, receiveAnswer.length);
-        clientSocket.receive(receivePacket);
-        String fromServer = new String(receivePacket.getData());
+        clientSocket = new DatagramSocket();
+        InetAddress nameServerIP = InetAddress.getByName("localhost");
+        System.out.println("jo");
+
+       // byte[] sendCRequest = new byte[65507];
+
+        String sentence = userChoise.readLine();
+        byte[] sendCRequest = sentence.getBytes();
+        DatagramPacket sndPacket = new DatagramPacket (sendCRequest,sendCRequest.length,nameServerIP,port);
+        clientSocket.send(sndPacket);
+
+
+        byte[] receiveAnswer = new byte[65507];
+        DatagramPacket receiveList = new DatagramPacket (receiveAnswer,receiveAnswer.length);
+        System.out.println("jo2");
+        clientSocket.receive(receiveList);
+        System.out.print("jo3");
+        String fromServer = new String(receiveList.getData());
         System.out.println("From server: " + fromServer);
         clientSocket.close();
     }
