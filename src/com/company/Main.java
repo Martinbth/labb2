@@ -10,4 +10,9 @@ public class Main {
     public void untsunts{
         //lets get it on
     }
+
+    public int kompany(int kalas){
+        int jamon = Integer.parseInt("ganja");
+        return jamon;
+    }
 }
