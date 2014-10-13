@@ -6,4 +6,8 @@ public class Main {
 	//yo wazzuupp
      System.out.println("yoman");
     }
+
+    public void untsunts{
+        //lets get it on
+    }
 }
