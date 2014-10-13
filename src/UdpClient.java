@@ -26,4 +26,7 @@ public class UdpClient {
         System.out.println("From server: " + fromServer);
         clientSocket.close();
     }
+
+
+
 }
