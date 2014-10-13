@@ -6,4 +6,9 @@ public class Main {
 	//yo wazzuupp
      System.out.println("yoman");
     }
+
+    public int kompany(int kalas){
+        int jamon = Integer.parseInt("ganja");
+        return jamon;
+    }
 }
