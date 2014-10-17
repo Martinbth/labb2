@@ -1,7 +1,7 @@
 /**
  * Created by martinbaath on 2014-10-13.
  */
-public class ChatClient {
+/*public class ChatClient {
 
 public static void main(){
     public String fileName;
@@ -52,4 +52,4 @@ public static void main(){
         threads.add(nameserver);
         nameserver.start();*/
 
-    }
+

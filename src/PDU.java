@@ -71,6 +71,7 @@ public class PDU
      */
     public short getByte(int offset)
     {
+
         return (short) (this.rawData[offset] & 0xFF);
     }
 
