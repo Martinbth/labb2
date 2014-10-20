@@ -1,9 +1,11 @@
 
-import java.io.*;
-import java.net.*;
-import java.nio.Buffer;
-import java.util.Calendar;
-import java.util.TimeZone;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.Socket;
 
 /**
  * Created by martinbaath on 14-10-19.
@@ -63,6 +65,8 @@ public class Client {
                         while (topicNs.length() % 4 != 0) {
                             topicNs = topicNs + '\0';
                         }
+
+
                     }
                 }
             }
@@ -74,53 +78,22 @@ public class Client {
             System.out.print("And the port number of the server: ");
             final int port = Integer.parseInt(serverChoose.readLine());
             serverSocket = new Socket(host, port);
-
         }
+
         catch(Exception e){
             System.out.print(e);
             System.exit(0);
         }
-    }
 
+
+
+    }
     public static int div4(int testInt){
         int ret = 0;
         if((4 -(testInt % 4)) != 0){
             ret = (4 -(testInt % 4));
         }
         return testInt + ret;
-    }
-
-    public void deliverItToSerb(byte[] betongen) {
-        try {
-            PrintStream toServer = new PrintStream(serverSocket.getOutputStream(), true);
-            toServer.write(betongen);
-        } catch (IOException K) {
-            K.printStackTrace();
-        }
-    }
-
-
-    protected BufferedReader getString(){
-        System.out.print("You say: ");
-        BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
-        return input;
-    }
-
-    protected void sendString(BufferedReader jj){
-        try{
-            String in = getString().readLine();
-            PDU kenring = pduHandler.stringToMsg(in);
-            deliverItToSerb(kenring.getBytes());
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    public static int getTime(){
-        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT+2"));
-        calendar.clear();
-        calendar.set(2011, Calendar.OCTOBER, 1);
-        return (int)(calendar.getTimeInMillis() / 1000L);
     }
 }
 
