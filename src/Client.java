@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.Socket;
 
 /**
  * Created by martinbaath on 14-10-19.
@@ -12,6 +13,7 @@ import java.net.InetAddress;
 public class Client {
     private static InetAddress nameServerAdress;
     private static DatagramSocket clientSocket;
+    private static Socket serverSocket;
     int lengthOfSlist = 0;
    // private static
 
@@ -33,11 +35,11 @@ public class Client {
             PDU rPDU = new PDU(receiveList.getData(), receiveList.getData().length);
             rPDU.setSubrange(0, receiveList.getData());
 
-
+            int listLenght = 4;
             if (rPDU.getByte(0) == OpCodes.SLIST) {
 
                 if (rPDU.getByte(1) == 0) {
-                    int listLenght = 4;
+
                     for (int i = 0; i < rPDU.getShort(2); i++) {
 
                         byte[] serverIp = rPDU.getSubrange(listLenght, 4);
@@ -50,8 +52,7 @@ public class Client {
                         int serverNameLength = (int) rPDU.getByte(listLenght);
                         listLenght = listLenght + 1;
 
-                        String serverName = new String(rPDU.getSubrange(listLenght,
-                                serverNameLength), "UTF-8");
+
                         //InetAddress server = InetAddress.getByAddress(serverIp);
 
                         String topicNs = new String(rPDU.getSubrange(listLenght,
@@ -60,21 +61,23 @@ public class Client {
                         System.out.println("Address: " + server + " Port: " + portNs + " Anslutna: " + numC + " Ämne: " +
                                 topicNs);
                         System.out.println("--------------------------");
-                        listLenght += listLenght % (4 * (serverNameLength));
+                        listLenght += div4(serverNameLength);
                         while (topicNs.length() % 4 != 0) {
                             topicNs = topicNs + '\0';
                         }
 
+
                     }
                 }
             }
-
+            //Användaren väljer server den vill ansluta sig till
             BufferedReader serverChoose = new BufferedReader(new InputStreamReader(System.in));
             System.out.print("Choose Server:  ");
 
             final InetAddress host = InetAddress.getByName(serverChoose.readLine());
             System.out.print("And the port number of the server: ");
             final int port = Integer.parseInt(serverChoose.readLine());
+            serverSocket = new Socket(host, port);
         }
 
         catch(Exception e){
@@ -84,6 +87,13 @@ public class Client {
 
 
 
+    }
+    public static int div4(int testInt){
+        int ret = 0;
+        if((4 -(testInt % 4)) != 0){
+            ret = (4 -(testInt % 4));
+        }
+        return testInt + ret;
     }
 }
 
