@@ -13,9 +13,8 @@ public class ClientNfo {
     private int tcpPort;
     private int time;
     private boolean connection = false;
-    private String crypt = "Foobar";
 
-    public ClientInfo(Socket s){
+    public ClientNfo(Socket s){
         this.setClientSocket(s);
     }
 

@@ -16,4 +16,12 @@ public class pduHandler {
         return pdu;
     }
 
+    public static PDU stringToMsg(String jamaica){
+        PDU pdu = new PDU(12 + jamaica.length());
+        pdu.setByte(0,(byte)OpCodes.MESSAGE);
+        pdu.setShort(4, (short)Client.div4(jamaica.length()));
+        pdu.setSubrange(12, jamaica.getBytes());
+        return pdu;
+    }
+
 }
