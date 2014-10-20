@@ -84,9 +84,8 @@ public class Client {
             System.out.print(e);
             System.exit(0);
         }
-
-
     }
+
     public static int div4(int testInt){
         int ret = 0;
         if((4 -(testInt % 4)) != 0){
