@@ -86,7 +86,6 @@ public class Client {
         }
 
 
-
     }
     public static int div4(int testInt){
         int ret = 0;
