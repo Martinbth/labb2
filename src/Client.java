@@ -1,12 +1,12 @@
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
-
 /**
  * Created by martinbaath on 14-10-19.
  */
@@ -16,7 +16,6 @@ public class Client {
     private static Socket serverSocket;
     int lengthOfSlist = 0;
    // private static
-
 
     public static void main(String [] ags) throws IOException{
 
@@ -65,8 +64,6 @@ public class Client {
                         while (topicNs.length() % 4 != 0) {
                             topicNs = topicNs + '\0';
                         }
-
-
                     }
                 }
             }
@@ -78,14 +75,25 @@ public class Client {
             System.out.print("And the port number of the server: ");
             final int port = Integer.parseInt(serverChoose.readLine());
             serverSocket = new Socket(host, port);
+
+
+            System.out.print("Enter nickname: ");
+
+            byte[] byteArray = new  byte[1024];
+            DataOutputStream out = new DataOutputStream(serverSocket.getOutputStream());
+            BufferedReader nickIn = new BufferedReader(new InputStreamReader(System.in));
+            String nickName;
+
+            nickName = nickIn.readLine();
+            PDU pduNick = pduHandler.join(nickName);
+            byteArray = pduNick.getBytes();
+            out.write(byteArray);
         }
 
         catch(Exception e){
             System.out.print(e);
             System.exit(0);
         }
-
-
 
     }
     public static int div4(int testInt){
