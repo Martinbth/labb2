@@ -99,6 +99,7 @@ public class Client {
         }
     }
 
+
     protected BufferedReader getString(){
         System.out.print("You say: ");
         BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
