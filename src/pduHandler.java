@@ -12,9 +12,7 @@ public class pduHandler {
      */
     public static PDU getList() {
         PDU pdu = new PDU(4);
-
         pdu.setByte(0, (byte) OpCodes.GETLIST);
-
         return pdu;
     }
 
@@ -27,36 +25,17 @@ public class pduHandler {
     }
 
     public static PDU join(String nick) throws UnsupportedEncodingException{
-        if(nick.getBytes("UTF-8").length % 4 != 0){
-            do{
-                nick += ' ';
-            }while(nick.getBytes("UTF-8").length % 4 != 0);
-        }
 
         byte[] nickName = nick.getBytes("UTF-8");
-        byte[] Pad = new byte[] {0, 0};
-
         PDU pdu = new PDU(4+nickName.length);
-
-
         pdu.setByte(0, (byte) OpCodes.JOIN);
         pdu.setByte(1, (byte) nick.getBytes("UTF-8").length);
-        pdu.setSubrange(3, Pad);
+
         pdu.setSubrange(4, nickName);
 
         return pdu;
     }
-    /*public static PDU join(String nickName) throws Exception {
 
-
-        PDU pdu = new PDU(4+nickName.length());
-        pdu.setByte(0,(byte)OpCodes.JOIN);
-        pdu.setShort(1,(short)Client.div4(nickName.length()));
-
-        pdu.setSubrange(4, nickName.getBytes());
-
-        return pdu;
-    }*/
 
     /* D� en klient har anslutit med PDU�n join returneras en lista med alla klienter som f�r tillf�llet
    * �r anslutna till servern. Mellan klients namn �terfinns ett null-tecken.  */

@@ -10,7 +10,7 @@ public class Client {
     private static Socket serverSocket;
     private static String nickName;
     int lengthOfSlist = 0;
-   // private static
+
     protected PrintStream sendToSerber;
 
     public static void main(String [] args) throws IOException{
@@ -18,6 +18,7 @@ public class Client {
         try {
             clientSocket = new DatagramSocket();
             nameServerAdress = InetAddress.getByName("itchy.cs.umu.se");
+            System.out.println(nameServerAdress);
             byte[] receiveData = new byte[65507];
             byte[] sendData = new byte[65507];
             PDU getList = pduHandler.getList();
@@ -46,7 +47,6 @@ public class Client {
                         listLenght = listLenght + 1;
                         int serverNameLength = (int) rPDU.getByte(listLenght);
                         listLenght = listLenght + 1;
-
 
                         //InetAddress server = InetAddress.getByAddress(serverIp);
 
@@ -85,17 +85,36 @@ public class Client {
             out.write(byteArray);
             out.write(pduNick.getBytes());
 
-            //PDU pduNicks = pduHandler.nicks()
+            while(true) {
+                //H�mtar outputten fr�n socketen
+                String fromUser = new String();
+
+                BufferedReader keyIn = new BufferedReader(new InputStreamReader(System.in));
+                fromUser = keyIn.readLine();
+                if (fromUser.equals("/help")) {
+                    System.out.println("Avaliable commands are: /chnick\n /message\n /quit\n /chtpc\n "
+                            + "/whois\n /chcryptkey\n /cryptkey\n /chmsgtype\n /msgtype");
+                } else {
+                    PDU pduMsg = pduHandler.stringToMsg(fromUser);
+
+                    pduMsg.setByte(3, (byte) 0);
+                    pduMsg.setByte(3, Checksum.calc(pduMsg.getBytes(), pduMsg.length()));
+                    short checkSum = (byte) pduMsg.getByte(3);
+                    pduMsg.setByte(3, (byte) checkSum);
+                    byteArray = pduMsg.getBytes();
+
+                    out.write(byteArray);
+                }
+            }
+
+
         }catch(Exception e){
             System.out.print(e);
             System.exit(0);
-
-            ClientMessage.setMessage();
-
         }
-
-        }
+        //ClientMessage.setMessage();
     }
+
     /*public void say(){
         System.out.print("You say: ");
         BufferedReader say = new BufferedReader(new InputStreamReader(System.in));
@@ -134,5 +153,3 @@ public class Client {
         return testInt + ret;
     }
 }
-
-
