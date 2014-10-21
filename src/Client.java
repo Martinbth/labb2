@@ -14,9 +14,9 @@ public class Client {
     private static InetAddress nameServerAdress;
     private static DatagramSocket clientSocket;
     private static Socket serverSocket;
-    private static String nickName;
     int lengthOfSlist = 0;
    // private static
+    protected PrintStream sendToSerber;
 
     public static void main(String [] ags) throws IOException{
 
@@ -93,8 +93,31 @@ public class Client {
             System.out.print(e);
             System.exit(0);
         }
-
     }
+
+
+    public void toSerb(){
+        try {
+            sendToSerber = new PrintStream(serverSocket.getOutputStream(), true);
+            sendToSerber.write(inStrToPdu().getBytes());
+        }catch (IOException ET){
+            System.out.println("Something wrong with Host or Port");
+        }
+    }
+
+    public String getMessage(){
+        System.out.print("You talk: ");
+        BufferedReader inputString= new BufferedReader(new InputStreamReader(System.in));
+        String inToStr = inputString.toString();
+        return inToStr;
+    }
+
+    public PDU inStrToPdu(){
+        PDU strToPDU = pduHandler.stringToMsg(getMessage());
+        return strToPDU;
+    }
+
+
     public static int div4(int testInt){
         int ret = 0;
         if((4 -(testInt % 4)) != 0){

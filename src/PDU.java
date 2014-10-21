@@ -27,7 +27,7 @@
  * it as an unsigned short using only two bytes. That's what the PDU class
  * can do for us.
  *
- * Once we want the data back from the PDU we need to store it as an int 
+ * Once we want the data back from the PDU we need to store it as an int
  * again. This is important to know because the PDU class won't give you
  * unsigned types, but the representation of the data stored in the PDU
  * is unsigned so it can be extracted and sent as it is to something that
