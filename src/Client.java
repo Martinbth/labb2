@@ -1,7 +1,5 @@
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -16,6 +14,7 @@ public class Client {
     private static Socket serverSocket;
     int lengthOfSlist = 0;
    // private static
+    protected PrintStream sendToSerber;
 
 
     public static void main(String [] ags) throws IOException{
@@ -78,13 +77,36 @@ public class Client {
             System.out.print("And the port number of the server: ");
             final int port = Integer.parseInt(serverChoose.readLine());
             serverSocket = new Socket(host, port);
-        }
 
+        }
         catch(Exception e){
             System.out.print(e);
             System.exit(0);
         }
     }
+
+
+    public void toSerb(){
+        try {
+            sendToSerber = new PrintStream(serverSocket.getOutputStream(), true);
+            sendToSerber.write(inStrToPdu().getBytes());
+        }catch (IOException ET){
+            System.out.println("Something wrong with Host or Port");
+        }
+    }
+
+    public String getMessage(){
+        System.out.print("You talk: ");
+        BufferedReader inputString= new BufferedReader(new InputStreamReader(System.in));
+        String inToStr = inputString.toString();
+        return inToStr;
+    }
+
+    public PDU inStrToPdu(){
+        PDU strToPDU = pduHandler.stringToMsg(getMessage());
+        return strToPDU;
+    }
+
 
     public static int div4(int testInt){
         int ret = 0;
