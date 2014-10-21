@@ -1,6 +1,4 @@
 
-import com.sun.tools.internal.xjc.reader.xmlschema.bindinfo.BIConversion;
-
 import java.io.*;
 import java.net.*;
 /**
@@ -61,21 +59,20 @@ public class Client {
                         listLenght += div4(serverNameLength);
                         while (topicNs.length() % 4 != 0) {
                             topicNs = topicNs + '\0';
-
-
                         }
                     }
                 }
             }
             //Användaren väljer server den vill ansluta sig till
             BufferedReader serverChoose = new BufferedReader(new InputStreamReader(System.in));
-            System.out.print("Choose Server:  ");
+            System.out.print("Choose Server to join:  ");
 
             final InetAddress host = InetAddress.getByName(serverChoose.readLine());
-            System.out.print("And the port number of the server: ");
+            System.out.print("Port number of the server: ");
             final int port = Integer.parseInt(serverChoose.readLine());
             serverSocket = new Socket(host, port);
 
+            new StreamDread(serverSocket).start();
             //Användaren väljer nickname den vill heta på servern
             System.out.print("Enter nickname: ");
 
@@ -86,6 +83,10 @@ public class Client {
             PDU pduNick = pduHandler.join(nickName);
             byteArray = pduNick.getBytes();
             out.write(byteArray);
+            out.write(pduNick.getBytes());
+
+            //PDU pduNicks = pduHandler.nicks()
+        }
 
             ClientMessage.setMessage();
 
@@ -104,6 +105,8 @@ public class Client {
         try {
             sendToSerber = new PrintStream(serverSocket.getOutputStream(), true);
             sendToSerber.write(inStrToPdu().getBytes());
+        }catch (IOException ET){
+            System.out.println("Something wrong with Host or Port");
         }
         catch (IOException ET){
             System.out.println("Couldn't deliver to either Host or Port");
