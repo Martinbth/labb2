@@ -1,12 +1,6 @@
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.Socket;
+import java.io.*;
+import java.net.*;
 /**
  * Created by martinbaath on 14-10-19.
  */
@@ -14,8 +8,9 @@ public class Client {
     private static InetAddress nameServerAdress;
     private static DatagramSocket clientSocket;
     private static Socket serverSocket;
+    private static String nickName;
     int lengthOfSlist = 0;
-   // private static
+
     protected PrintStream sendToSerber;
 
     public static void main(String [] ags) throws IOException{
@@ -70,13 +65,14 @@ public class Client {
             }
             //Användaren väljer server den vill ansluta sig till
             BufferedReader serverChoose = new BufferedReader(new InputStreamReader(System.in));
-            System.out.print("Choose Server:  ");
+            System.out.print("Choose Server to join:  ");
 
             final InetAddress host = InetAddress.getByName(serverChoose.readLine());
-            System.out.print("And the port number of the server: ");
+            System.out.print("Port number of the server: ");
             final int port = Integer.parseInt(serverChoose.readLine());
             serverSocket = new Socket(host, port);
 
+            new StreamDread(serverSocket).start();
             //Användaren väljer nickname den vill heta på servern
             System.out.print("Enter nickname: ");
 
@@ -86,7 +82,9 @@ public class Client {
             nickName = nickIn.readLine();
             PDU pduNick = pduHandler.join(nickName);
             byteArray = pduNick.getBytes();
-            out.write(byteArray);
+            out.write(pduNick.getBytes());
+
+            //PDU pduNicks = pduHandler.nicks()
         }
 
         catch(Exception e){
