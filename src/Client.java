@@ -18,7 +18,6 @@ public class Client {
         try {
             clientSocket = new DatagramSocket();
             nameServerAdress = InetAddress.getByName("itchy.cs.umu.se");
-            System.out.println(nameServerAdress);
             byte[] receiveData = new byte[65507];
             byte[] sendData = new byte[65507];
             PDU getList = pduHandler.getList();
@@ -48,6 +47,7 @@ public class Client {
                         int serverNameLength = (int) rPDU.getByte(listLenght);
                         listLenght = listLenght + 1;
 
+
                         //InetAddress server = InetAddress.getByAddress(serverIp);
 
                         String topicNs = new String(rPDU.getSubrange(listLenght,
@@ -76,7 +76,7 @@ public class Client {
             //Användaren väljer nickname den vill heta på servern
             System.out.print("Enter nickname: ");
 
-            byte[] byteArray = new  byte[1024];
+            byte[] byteArray = new byte[1024];
             DataOutputStream out = new DataOutputStream(serverSocket.getOutputStream());
             BufferedReader nickIn = new BufferedReader(new InputStreamReader(System.in));
             nickName = nickIn.readLine();
@@ -85,12 +85,17 @@ public class Client {
             out.write(byteArray);
             out.write(pduNick.getBytes());
 
+
+            //PDU pduNicks = pduHandler.nicks()
+
+
             while(true) {
                 //H�mtar outputten fr�n socketen
                 String fromUser = new String();
-
                 BufferedReader keyIn = new BufferedReader(new InputStreamReader(System.in));
                 fromUser = keyIn.readLine();
+
+
                 if (fromUser.equals("/help")) {
                     System.out.println("Avaliable commands are: /chnick\n /message\n /quit\n /chtpc\n "
                             + "/whois\n /chcryptkey\n /cryptkey\n /chmsgtype\n /msgtype");
@@ -112,8 +117,39 @@ public class Client {
             System.out.print(e);
             System.exit(0);
         }
+
+        while (true) {
+            String inToStr = new String();
+            BufferedReader inputBuff= new BufferedReader(new InputStreamReader(System.in));
+            inToStr = inputBuff.readLine();
+
+            try {
+                ClientMessage.toSerb(inToStr);
+
+            } catch (Exception u) {
+                System.out.print("Fel i talk");
+            }
+        }
+    }
+
+    /*public static void talk(){
+        System.out.println("Enter text: ");
+        BufferedReader inputBuff= new BufferedReader(new InputStreamReader(System.in));
+        String inToStr = inputBuff.toString();
+        ClientMessage.toSerb(inToStr);
+    }*/
+
+    public static int div4(int testInt){
+        int ret = 0;
+        if((4 -(testInt % 4)) != 0){
+            ret = (4 -(testInt % 4));
+        }
+        return testInt + ret;
         //ClientMessage.setMessage();
     }
+
+
+
 
     /*public void say(){
         System.out.print("You say: ");
@@ -143,13 +179,5 @@ public class Client {
         PDU strToPDU = pduHandler.stringToMsg(setMessage());
         return strToPDU;
     }
-            */
-
-    public static int div4(int testInt){
-        int ret = 0;
-        if((4 -(testInt % 4)) != 0){
-            ret = (4 -(testInt % 4));
-        }
-        return testInt + ret;
-    }
+*/
 }

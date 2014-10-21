@@ -12,7 +12,9 @@ public class pduHandler {
      */
     public static PDU getList() {
         PDU pdu = new PDU(4);
+
         pdu.setByte(0, (byte) OpCodes.GETLIST);
+
         return pdu;
     }
 
