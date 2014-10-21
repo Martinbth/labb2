@@ -86,14 +86,14 @@ public class Client {
             out.write(pduNick.getBytes());
 
             //PDU pduNicks = pduHandler.nicks()
-        }
+        }catch(Exception e){
+            System.out.print(e);
+            System.exit(0);
 
             ClientMessage.setMessage();
 
         }
-        catch(Exception e){
-            System.out.print(e);
-            System.exit(0);
+
         }
     }
     /*public void say(){
