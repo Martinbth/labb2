@@ -14,6 +14,7 @@ public class Client {
     private static InetAddress nameServerAdress;
     private static DatagramSocket clientSocket;
     private static Socket serverSocket;
+    private static String nickName;
     int lengthOfSlist = 0;
    // private static
 
@@ -76,14 +77,12 @@ public class Client {
             final int port = Integer.parseInt(serverChoose.readLine());
             serverSocket = new Socket(host, port);
 
-
+            //Användaren väljer nickname den vill heta på servern
             System.out.print("Enter nickname: ");
 
             byte[] byteArray = new  byte[1024];
             DataOutputStream out = new DataOutputStream(serverSocket.getOutputStream());
             BufferedReader nickIn = new BufferedReader(new InputStreamReader(System.in));
-            String nickName;
-
             nickName = nickIn.readLine();
             PDU pduNick = pduHandler.join(nickName);
             byteArray = pduNick.getBytes();
