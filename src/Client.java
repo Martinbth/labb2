@@ -1,12 +1,8 @@
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.Socket;
+import com.sun.tools.internal.xjc.reader.xmlschema.bindinfo.BIConversion;
+
+import java.io.*;
+import java.net.*;
 /**
  * Created by martinbaath on 14-10-19.
  */
@@ -14,11 +10,12 @@ public class Client {
     private static InetAddress nameServerAdress;
     private static DatagramSocket clientSocket;
     private static Socket serverSocket;
+    private static String nickName;
     int lengthOfSlist = 0;
    // private static
     protected PrintStream sendToSerber;
 
-    public static void main(String [] ags) throws IOException{
+    public static void main(String [] args) throws IOException{
 
         try {
             clientSocket = new DatagramSocket();
@@ -64,6 +61,8 @@ public class Client {
                         listLenght += div4(serverNameLength);
                         while (topicNs.length() % 4 != 0) {
                             topicNs = topicNs + '\0';
+
+
                         }
                     }
                 }
@@ -87,36 +86,42 @@ public class Client {
             PDU pduNick = pduHandler.join(nickName);
             byteArray = pduNick.getBytes();
             out.write(byteArray);
-        }
 
+            ClientMessage.setMessage();
+
+        }
         catch(Exception e){
             System.out.print(e);
             System.exit(0);
         }
     }
-
-
-    public void toSerb(){
+    /*public void say(){
+        System.out.print("You say: ");
+        BufferedReader say = new BufferedReader(new InputStreamReader(System.in));
+        setMessage(say);
+    }
+    public void toSerb(String mess){
         try {
             sendToSerber = new PrintStream(serverSocket.getOutputStream(), true);
             sendToSerber.write(inStrToPdu().getBytes());
-        }catch (IOException ET){
-            System.out.println("Something wrong with Host or Port");
+        }
+        catch (IOException ET){
+            System.out.println("Couldn't deliver to either Host or Port");
         }
     }
 
-    public String getMessage(){
+    public String setMessage(){
         System.out.print("You talk: ");
-        BufferedReader inputString= new BufferedReader(new InputStreamReader(System.in));
-        String inToStr = inputString.toString();
+        BufferedReader inputBuff= new BufferedReader(new InputStreamReader(System.in));
+        String inToStr = inputBuff.toString();
         return inToStr;
     }
 
     public PDU inStrToPdu(){
-        PDU strToPDU = pduHandler.stringToMsg(getMessage());
+        PDU strToPDU = pduHandler.stringToMsg(setMessage());
         return strToPDU;
     }
-
+            */
 
     public static int div4(int testInt){
         int ret = 0;
