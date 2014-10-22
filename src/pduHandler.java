@@ -11,16 +11,20 @@ public class pduHandler {
      * @return en klar pdu
      */
     public static PDU getList() {
+
         PDU pdu = new PDU(4);
         pdu.setByte(0, (byte) OpCodes.GETLIST);
+
         return pdu;
     }
 
     public static PDU stringToMsg(String jamaica){
+
         PDU pdu = new PDU(12 + jamaica.length());
         pdu.setByte(0,(byte)OpCodes.MESSAGE);
         pdu.setShort(4, (short)Client.div4(jamaica.length()));
         pdu.setSubrange(12, jamaica.getBytes());
+
         return pdu;
     }
 
@@ -30,22 +34,37 @@ public class pduHandler {
         PDU pdu = new PDU(4+nickName.length);
         pdu.setByte(0, (byte) OpCodes.JOIN);
         pdu.setByte(1, (byte) nick.getBytes("UTF-8").length);
-
         pdu.setSubrange(4, nickName);
 
         return pdu;
     }
 
 
+    public static PDU chnick(String nick) throws UnsupportedEncodingException{
+
+        byte[] nickName = nick.getBytes("UTF-8");
+        PDU pdu = new PDU(4+nickName.length);
+        pdu.setByte(0, (byte) OpCodes.CHNICK);
+        pdu.setByte(1, (byte) nick.getBytes("UTF-8").length);
+        pdu.setSubrange(4, nickName);
+
+        return pdu;
+    }
+
+    public static PDU quit(){
+        PDU pdu = new PDU(4);
+        pdu.setByte(0, (byte)OpCodes.QUIT);
+        return pdu;
+    }
+
+
     /* D� en klient har anslutit med PDU�n join returneras en lista med alla klienter som f�r tillf�llet
-   * �r anslutna till servern. Mellan klients namn �terfinns ett null-tecken.  */
+   * �r anslutna till servern. Mellan klients namn �terfinns ett null-tecken.
     public static PDU nicks(ArrayList<String> list, String ownName) throws UnsupportedEncodingException{
         String string = new String();
         int i;
-
         list.remove(ownName);
         list.add(0, ownName);
-
         for(i = 0; i < list.size(); i++){
             string = string + list.get(i) + '\0';
         }
@@ -66,7 +85,7 @@ public class pduHandler {
         pdu.setSubrange(4, stringlength);
 
         return pdu;
-    }
+    }*/
 
 
 

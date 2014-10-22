@@ -28,10 +28,11 @@ public class StreamDread extends Thread {
             String out = new String();
             String client = new String();
             //Så länge servern är uppe lyssnar den på in och ut data
-           //while (true) {
-                byte[] receiveData = new byte[1024];
+            byte[] receiveData = new byte[1024];
+            while (true && (in.read(receiveData)) > 0) {
+                //byte[] receiveData = new byte[1024];
                 in.read(receiveData);
-                while(receiveData.length > 0) {
+
 
                     PDU inPDU = new PDU(receiveData, receiveData.length);
                     //Beroende vilken operation kod man får in hanterar man den särskilt för sig
@@ -41,20 +42,23 @@ public class StreamDread extends Thread {
                             Nicks(inPDU);
                             break;
 
-                        case OpCodes.MESSAGE:
-                            out = new String(inPDU.getSubrange(12, inPDU.getShort(4)), "UTF-8");
+                        //case OpCodes.MESSAGE:
 
-                            System.out.println(date + " " + client + ": " + out);
+
                             //Message(inPDU, client,date);
-                            int time = (int) inPDU.getInt(8);
-                            date.setTime((long) time * 1000);
-                            break;
 
+                            //break;
+
+                        case OpCodes.ULEAVE:
+                            ULeave(inPDU, date);
+
+                            break;
+                        case OpCodes.UJOIN:
+                            //UJoin(inPDU);
+
+                            break;
                     }
                 }
-
-
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -72,10 +76,11 @@ public class StreamDread extends Thread {
         for (int i=0; i<nrOfNicks; i++) {
             System.out.println("List: " +parts[i]);
         }
-
     }
 
+
     public void Message(PDU inPDU, String user, Date date)throws Exception{
+
         int checkSum1;
         int checkSum2;
         String out = new String();
@@ -84,14 +89,29 @@ public class StreamDread extends Thread {
         inPDU.setByte(3, Checksum.calc(inPDU.getBytes(),inPDU.length()));
         checkSum2=inPDU.getByte(3);
         //user =new String(inPDU.getSubrange(12+));
-        if(checkSum1==checkSum2){
 
+        if(checkSum1==checkSum2){
 
          out = new String(inPDU.getSubrange(12, (int) inPDU.getShort(4)), "UTF-8");
          System.out.println(date + " " + user + ": " + out);
          }
 
         }
+    public void ULeave(PDU inPDU,Date date){
+        String uleaveName = new String(inPDU.getSubrange(8, inPDU.getByte(1)));
+
+        int uleaveTime = (int)inPDU.getInt(4);
+        date.setTime((long)uleaveTime*1000);
+
+        System.out.println(date + " User " + uleaveName.trim() + " has disconnected from the server.");
+    }
+
+   /* public void UJoin(PDU inPDU, Date date, ){
+        out = new String(inPDU.getSubrange(8, (int) inPDU.getByte(1)));
+        date.setTime((long)inPDU.getInt(4)*1000);
+
+        System.out.println(date + " " + out.trim() + " has connected.");
+    }*/
 
     }
 
