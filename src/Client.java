@@ -73,8 +73,8 @@ public class Client {
             final int port = Integer.parseInt(serverChoose.readLine());
             serverSocket = new Socket(host, port);
 
-            StreamDread belive=new StreamDread(serverSocket);
-            belive.start();
+            new StreamDread(serverSocket).start();
+
 
             //Användaren väljer nickname den vill heta på servern
             System.out.print("Enter nickname: ");
