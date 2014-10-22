@@ -29,8 +29,10 @@ public class StreamDread extends Thread {
             String client = new String();
             //Så länge servern är uppe lyssnar den på in och ut data
             //&& (in.read(receiveData)) > 0
-            byte[] receiveData = new byte[1024];
+
             while (true ) {
+                Thread.sleep(100);
+                byte[] receiveData = new byte[65507];
                 //byte[] receiveData = new byte[1024];
                 in.read(receiveData);
                 PDU inPDU = new PDU(receiveData, receiveData.length);
@@ -43,7 +45,7 @@ public class StreamDread extends Thread {
 
                         case OpCodes.MESSAGE:
 
-                            Message(inPDU, client,date);
+                            Message(inPDU,date);
 
                             break;
 
@@ -79,7 +81,7 @@ public class StreamDread extends Thread {
         }
     }
 
-    public void Message(PDU inPDU, String user, Date date)throws Exception{
+    public void Message(PDU inPDU, Date date)throws Exception{
 
         int checkSum1;
         int checkSum2;
@@ -88,7 +90,7 @@ public class StreamDread extends Thread {
         inPDU.setByte(3,(byte)0);
         inPDU.setByte(3, Checksum.calc(inPDU.getBytes(),inPDU.length()));
         checkSum2=inPDU.getByte(3);
-        user =new String(inPDU.getSubrange(12+inPDU.getShort(4), inPDU.getByte(2)), "UTF-8");
+        String user =new String(inPDU.getSubrange(12+inPDU.getShort(4), inPDU.getByte(2)), "UTF-8");
 
         if(checkSum1==checkSum2){
 
@@ -96,8 +98,9 @@ public class StreamDread extends Thread {
          System.out.println(date + " " + user + ": " + out);
 
          }
-//
-        }
+
+    }
+
     public void ULeave(PDU inPDU,Date date){
         String uleaveName = new String(inPDU.getSubrange(8, inPDU.getByte(1)));
 
@@ -113,6 +116,5 @@ public class StreamDread extends Thread {
 
         System.out.println(date + " " + out.trim() + " has connected.");
     }
-
-    }
+}
 
