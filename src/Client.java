@@ -73,7 +73,8 @@ public class Client {
             final int port = Integer.parseInt(serverChoose.readLine());
             serverSocket = new Socket(host, port);
 
-            StreamDread belive=new StreamDread(serverSocket);
+
+            StreamDread belive = new StreamDread(serverSocket);
             belive.start();
 
             //Användaren väljer nickname den vill heta på servern
@@ -114,54 +115,21 @@ public class Client {
                     out.write(byteArray);
                 }
                 else{
+                   // ClientMessage.toSerb(userOp);
                     PDU msgPDU = pduHandler.stringToMsg(userOp);
                     msgPDU.setByte(3, (byte)0);
                     msgPDU.setByte(3, Checksum.calc(msgPDU.getBytes(),msgPDU.length()));
                     short checkSum = (byte)msgPDU.getByte(3);
                     msgPDU.setByte(3, (byte)checkSum);
                     byteArray = msgPDU.getBytes();
-
                     out.write(byteArray);
                 }
-
             }
-
         }catch(Exception e){
             System.out.print(e);
             System.exit(0);
         }
-        //ClientMessage.setMessage();
     }
-
-    /*public void say(){
-        System.out.print("You say: ");
-        BufferedReader say = new BufferedReader(new InputStreamReader(System.in));
-        setMessage(say);
-    }
-    public void toSerb(String mess){
-        try {
-            sendToSerber = new PrintStream(serverSocket.getOutputStream(), true);
-            sendToSerber.write(inStrToPdu().getBytes());
-        }catch (IOException ET){
-            System.out.println("Something wrong with Host or Port");
-        }
-        catch (IOException ET){
-            System.out.println("Couldn't deliver to either Host or Port");
-        }
-    }
-
-    public String setMessage(){
-        System.out.print("You talk: ");
-        BufferedReader inputBuff= new BufferedReader(new InputStreamReader(System.in));
-        String inToStr = inputBuff.toString();
-        return inToStr;
-    }
-
-    public PDU inStrToPdu(){
-        PDU strToPDU = pduHandler.stringToMsg(setMessage());
-        return strToPDU;
-    }
-            */
 
     public static int div4(int testInt){
         int ret = 0;
