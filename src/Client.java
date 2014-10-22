@@ -114,6 +114,7 @@ public class Client {
                     out.write(byteArray);
                 }
                 else{
+                   // ClientMessage.toSerb(userOp);
                     PDU msgPDU = pduHandler.stringToMsg(userOp);
                     msgPDU.setByte(3, (byte)0);
                     msgPDU.setByte(3, Checksum.calc(msgPDU.getBytes(),msgPDU.length()));
