@@ -83,21 +83,19 @@ public class StreamDread extends Thread {
         for (int i=0; i<nrOfNicks; i++) {
             System.out.println("User: " +parts[i]);
         }
+        System.out.print("> ");
     }
 
+    /**
+     * Inkommande meddelanden från chatservern (Välkomstmeddelande från server och användares meddelande)
+     */
+
     public void Message(PDU inPDU, Date date)throws Exception{
-
-
-        String out = new String();
-
+        String message;
         String user =new String(inPDU.getSubrange(12+inPDU.getShort(4), inPDU.getByte(2)), "UTF-8");
 
-
-
-         out = new String(inPDU.getSubrange(12,  inPDU.getShort(4)), "UTF-8");
-         System.out.println(date + " " + user + ": " + out);
-
-
+         message = new String(inPDU.getSubrange(12,  inPDU.getShort(4)), "UTF-8");
+         System.out.println(date + " " + user + ": " + message);
 
     }
 
