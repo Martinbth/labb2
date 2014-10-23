@@ -49,9 +49,9 @@ public class pduHandler {
     public static PDU chnick(String nick) throws UnsupportedEncodingException{
 
         byte[] nickName = nick.getBytes("UTF-8");
-        PDU pdu = new PDU(4+nickName.length);
+        PDU pdu = new PDU(4+Client.div4(nickName.length));
         pdu.setByte(0, (byte) OpCodes.CHNICK);
-        pdu.setByte(1, (byte) nick.getBytes("UTF-8").length);
+        pdu.setByte(1, (byte) Client.div4(nick.getBytes("UTF-8").length));
         pdu.setSubrange(4, nickName);
 
         return pdu;

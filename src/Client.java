@@ -94,7 +94,7 @@ public class Client {
 
             //Användarens kommandon aka clienten
             while(true){
-                System.out.print("> ");
+
                 userOp=new String();
                 BufferedReader kIn = new BufferedReader(new InputStreamReader(System.in));
                 userOp = kIn.readLine();
@@ -115,6 +115,7 @@ public class Client {
                     PDU quitPDU=pduHandler.quit();
                     byteArray=quitPDU.getBytes();
                     out.write(byteArray);
+                    System.out.println("You left the server, good for you");
                 }
                 else{
                    // ClientMessage.toSerb(userOp);

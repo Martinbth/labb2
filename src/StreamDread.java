@@ -60,6 +60,8 @@ public class StreamDread extends Thread {
                             UJoin(inPDU, date);
 
                             break;
+                        case OpCodes.UCNICK:
+                            UchNick(inPDU,date);
                     }
                 }
                 }
@@ -109,14 +111,29 @@ public class StreamDread extends Thread {
         int uleaveTime = (int)inPDU.getInt(4);
         date.setTime((short)uleaveTime*1000);
 
-        System.out.println(date + " User " + uleaveName.trim() + " has disconnected from the server.");
+        System.out.println(date + " User: " + uleaveName.trim() + " has disconnected from the server.");
     }
 
+    /**
+     * Meddelande om en user har anslutit till servern
+
+     */
     public void UJoin(PDU inPDU, Date date){
         String out = new String(inPDU.getSubrange(8, (int) inPDU.getByte(1)));
         date.setTime((short)inPDU.getInt(4)*1000);
 
-        System.out.println(date + " " + out.trim() + " has connected.");
+        System.out.println(date + "User: " + out.trim() + " has connected.");
+    }
+
+    public void UchNick(PDU inPDU,Date date) {
+        String oldNick = new String(inPDU.getSubrange(8, inPDU.getByte(1)));
+        String newnick = new String(inPDU.getSubrange(8+inPDU.getByte(1), inPDU.getByte(2)));
+
+        /*int time2 = (int) inPDU.getInt(4);
+        date.setTime((short)time2*1000);*/
+
+        System.out.println(date + " " + oldNick.trim() + " has changed name to " + newnick.trim() + ".");
+
     }
 }
 
