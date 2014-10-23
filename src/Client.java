@@ -79,13 +79,14 @@ public class Client {
             //Användaren väljer nickname den vill heta på servern
             System.out.print("Enter nickname: ");
 
-            byte[] byteArray = new byte[1024];
+            byte[] byteArray;
             DataOutputStream out = new DataOutputStream(serverSocket.getOutputStream());
             BufferedReader nickIn = new BufferedReader(new InputStreamReader(System.in));
-            String nickName = nickIn.readLine();
+            String nickName;
+            nickName=nickIn.readLine();
             PDU pduNick = pduHandler.join(nickName);
-            byteArray = pduNick.getBytes();
-            out.write(byteArray);
+            //byteArray = pduNick.getBytes();
+            //out.write(byteArray);
             out.write(pduNick.getBytes());
 
             //De val användaren kan göra på servern skrivs ut
@@ -93,10 +94,11 @@ public class Client {
 
             //Användarens kommandon aka clienten
             while(true){
+                System.out.print("> ");
                 userOp=new String();
                 BufferedReader kIn = new BufferedReader(new InputStreamReader(System.in));
                 userOp = kIn.readLine();
-                System.out.println("> ");
+
 
                 //beroende på vilken operation användaren väljer
                 if(userOp.equals("/chnick")) {
@@ -107,7 +109,7 @@ public class Client {
                     byteArray=chnickPDU.getBytes();
                     out.write(byteArray);
                 }else if(userOp.equals("/help")){
-                    System.out.println("Commands:\n /chnick\n /help");
+                    System.out.println("Commands:\n /chnick\n /leave\n /help");
 
                 }else if(userOp.equals("/leave")){
                     PDU quitPDU=pduHandler.quit();
@@ -116,7 +118,7 @@ public class Client {
                 }
                 else{
                    // ClientMessage.toSerb(userOp);
-                    PDU msgPDU = pduHandler.stringToMsg(userOp);
+                    PDU msgPDU = pduHandler.message(userOp);
                     msgPDU.setByte(3, (byte)0);
                     msgPDU.setByte(3, Checksum.calc(msgPDU.getBytes(),msgPDU.length()));
                     short checkSum = (byte)msgPDU.getByte(3);
@@ -125,7 +127,6 @@ public class Client {
 
                     out.write(byteArray);
                 }
-
             }
 
         }catch(Exception e){
