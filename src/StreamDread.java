@@ -21,7 +21,7 @@ public class StreamDread extends Thread {
         //Sätter en klocka som tråden kan använda
         Date date = new Date();
         unixTime = (int) (System.currentTimeMillis() /1000L);
-        date.setTime((long) unixTime * 1000);
+        date.setTime((short) unixTime * 1000);
 
         try {
             BufferedInputStream in = new BufferedInputStream(Socket.getInputStream());
@@ -66,16 +66,18 @@ public class StreamDread extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
+
+    /**
+     * Skriver ut en lista på alla användare som är anslutna till servern
+     */
     public void Nicks(PDU inPDU){
         int nrOfNicks = inPDU.getByte(1);
         int nicksLength = inPDU.getShort(2);
         String nicks = new String(inPDU.getSubrange(4, nicksLength));
-        //ArrayList list= new ArrayList ();
-        // list.add(nicks.split("\0"));
+        //delar upp strängen av användare i en array
         String[] parts=nicks.split("\0");
         System.out.println("Connected clients: " + nrOfNicks);
         System.out.println("Length of the list: " + nicksLength);
@@ -92,25 +94,27 @@ public class StreamDread extends Thread {
 
     public void Message(PDU inPDU, Date date)throws Exception{
         String message;
-        String user =new String(inPDU.getSubrange(12+inPDU.getShort(4), inPDU.getByte(2)), "UTF-8");
+        String user =new String(inPDU.getSubrange(Client.div4(12+inPDU.getShort(4)), inPDU.getByte(2)), "UTF-8");
 
          message = new String(inPDU.getSubrange(12,  inPDU.getShort(4)), "UTF-8");
          System.out.println(date + " " + user + ": " + message);
-
     }
 
+    /**
+     * Skickar ut ett meddelande om någon på servern har lämnat inkl sig själv
+     */
     public void ULeave(PDU inPDU,Date date){
         String uleaveName = new String(inPDU.getSubrange(8, inPDU.getByte(1)));
 
         int uleaveTime = (int)inPDU.getInt(4);
-        date.setTime((long)uleaveTime*1000);
+        date.setTime((short)uleaveTime*1000);
 
         System.out.println(date + " User " + uleaveName.trim() + " has disconnected from the server.");
     }
 
     public void UJoin(PDU inPDU, Date date){
         String out = new String(inPDU.getSubrange(8, (int) inPDU.getByte(1)));
-        date.setTime((long)inPDU.getInt(4)*1000);
+        date.setTime((short)inPDU.getInt(4)*1000);
 
         System.out.println(date + " " + out.trim() + " has connected.");
     }

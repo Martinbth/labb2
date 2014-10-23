@@ -64,23 +64,16 @@ public class pduHandler {
     }
 
     public static PDU message(String msg) throws Exception {
-        if (msg.getBytes("UTF-8").length % 4 != 0) {
-            do {
-                msg += ' ';
-
-            } while (msg.getBytes("UTF-8").length % 4 != 0);
-        }
 
         byte[] mess = msg.getBytes("UTF-8");
-        byte[] Pad = new byte[]{0, 0};
-        byte[] oldmsg = mess;
-        PDU pdu = new PDU(12 + mess.length);
+        //byte[] Pad = new byte[]{0, 0};
+        //byte[] oldmsg = mess;
+        PDU pdu = new PDU(12 + Client.div4(mess.length));
 
         pdu.setByte(0, (byte) OpCodes.MESSAGE);
-        //pdu.setByte(1, (byte) status);
         pdu.setByte(2, (byte) 0);
-        pdu.setShort(4, (short) msg.getBytes("UTF-8").length);
-        pdu.setSubrange(6, Pad);
+        pdu.setShort(4,(short)Client.div4(msg.length()));
+        //pdu.setSubrange(6, Pad);
         pdu.setInt(8, 0);
         pdu.setSubrange(12, mess);
         pdu.setByte(3, Checksum.calc(pdu.getBytes(), pdu.length()));
