@@ -19,10 +19,10 @@ public class StreamDread extends Thread {
 
     public void run() {
         //Sätter en klocka som tråden kan använda
-        Date date = new Date();
+        /*Date date = new Date();
         unixTime = (int) (System.currentTimeMillis() /1000L);
-        date.setTime((short) unixTime * 1000);
-
+        date.setTime((long) unixTime * 1000);
+*/
         try {
             BufferedInputStream in = new BufferedInputStream(Socket.getInputStream());
             String out = new String();
@@ -36,7 +36,7 @@ public class StreamDread extends Thread {
 
                 //byte[] receiveData = new byte[1024];
                 if (in.read(receiveData)>3) {
-                    ;
+
                     PDU inPDU = new PDU(receiveData, receiveData.length);
                     //
                     //Beroende vilken operation kod man får in hanterar man den särskilt för sig
@@ -48,20 +48,20 @@ public class StreamDread extends Thread {
 
                         case OpCodes.MESSAGE:
 
-                            Message(inPDU, date);
+                            Message(inPDU);
 
                             break;
 
                         case OpCodes.ULEAVE:
-                            ULeave(inPDU, date);
+                            ULeave(inPDU);
 
                             break;
                         case OpCodes.UJOIN:
-                            UJoin(inPDU, date);
+                            UJoin(inPDU);
 
                             break;
                         case OpCodes.UCNICK:
-                            UchNick(inPDU,date);
+                            UchNick(inPDU);
                     }
                 }
                 }
@@ -94,10 +94,10 @@ public class StreamDread extends Thread {
      * Inkommande meddelanden från chatservern (Välkomstmeddelande från server och användares meddelande)
      */
 
-    public void Message(PDU inPDU, Date date)throws Exception{
+    public void Message(PDU inPDU)throws Exception{
         String message;
-        String user =new String(inPDU.getSubrange(Client.div4(12+inPDU.getShort(4)), inPDU.getByte(2)), "UTF-8");
-
+        String user =new String(inPDU.getSubrange(12+inPDU.getShort(4), inPDU.getByte(2)), "UTF-8");
+         Date date = new Date(inPDU.getInt(8)*1000);
          message = new String(inPDU.getSubrange(12,  inPDU.getShort(4)), "UTF-8");
          System.out.println(date + " " + user + ": " + message);
     }
@@ -105,11 +105,10 @@ public class StreamDread extends Thread {
     /**
      * Skickar ut ett meddelande om någon på servern har lämnat inkl sig själv
      */
-    public void ULeave(PDU inPDU,Date date){
+    public void ULeave(PDU inPDU){
         String uleaveName = new String(inPDU.getSubrange(8, inPDU.getByte(1)));
+        Date date = new Date(inPDU.getInt(4)*1000);
 
-        int uleaveTime = (int)inPDU.getInt(4);
-        date.setTime((short)uleaveTime*1000);
 
         System.out.println(date + " User: " + uleaveName.trim() + " has disconnected from the server.");
     }
@@ -118,17 +117,18 @@ public class StreamDread extends Thread {
      * Meddelande om en user har anslutit till servern
 
      */
-    public void UJoin(PDU inPDU, Date date){
+    public void UJoin(PDU inPDU){
         String out = new String(inPDU.getSubrange(8, (int) inPDU.getByte(1)));
-        date.setTime((short)inPDU.getInt(4)*1000);
+        Date date = new Date(inPDU.getInt(4)*1000);
 
-        System.out.println(date + "User: " + out.trim() + " has connected.");
+
+        System.out.println(date + " User: " + out.trim() + " has connected.");
     }
 
-    public void UchNick(PDU inPDU,Date date) {
+    public void UchNick(PDU inPDU) {
         String oldNick = new String(inPDU.getSubrange(8, inPDU.getByte(1)));
         String newnick = new String(inPDU.getSubrange(8+inPDU.getByte(1), inPDU.getByte(2)));
-
+        Date date = new Date(inPDU.getInt(4)*1000);
         /*int time2 = (int) inPDU.getInt(4);
         date.setTime((short)time2*1000);*/
 
@@ -136,4 +136,8 @@ public class StreamDread extends Thread {
 
     }
 }
+
+
+
+
 

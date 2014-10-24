@@ -72,7 +72,7 @@ public class pduHandler {
 
         pdu.setByte(0, (byte) OpCodes.MESSAGE);
         pdu.setByte(2, (byte) 0);
-        pdu.setShort(4,(short)Client.div4(msg.length()));
+        pdu.setShort(4,(short)Client.div4(mess.length));
         //pdu.setSubrange(6, Pad);
         pdu.setInt(8, 0);
         pdu.setSubrange(12, mess);
