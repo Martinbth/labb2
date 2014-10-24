@@ -9,7 +9,7 @@ import java.util.Date;
  */
 public class StreamDread extends Thread {
     private Socket Socket;
-    private static int unixTime;
+    //private static int unixTime;
 
 
     public StreamDread(Socket socket) {
@@ -71,7 +71,6 @@ public class StreamDread extends Thread {
             e.printStackTrace();
         }
     }
-
     /**
      * Skriver ut en lista på alla användare som är anslutna till servern
      */
