@@ -10,7 +10,7 @@ public class Client {
     private static Socket serverSocket;
     //private static String nickName;
     private static String userOp;
-    int lengthOfSlist = 0;
+
 
     protected PrintStream sendToSerber;
 

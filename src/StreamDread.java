@@ -18,24 +18,21 @@ public class StreamDread extends Thread {
     }
 
     public void run() {
-        //Sätter en klocka som tråden kan använda
-        /*Date date = new Date();
-        unixTime = (int) (System.currentTimeMillis() /1000L);
-        date.setTime((long) unixTime * 1000);
-*/
+
         try {
             BufferedInputStream in = new BufferedInputStream(Socket.getInputStream());
-            String out = new String();
-            String client = new String();
+
             //Så länge servern är uppe lyssnar den på in och ut data
-            //&& (in.read(receiveData)) > 0
 
             while (true ) {
                 Thread.sleep(100);
-                byte[] receiveData = new byte[65507];
-
-                //byte[] receiveData = new byte[1024];
-                if (in.read(receiveData)>3) {
+                byte[] receiveData=new byte[65503];
+                int x;
+                x =in.read(receiveData);
+                byte[] receiveDatanew=new byte[x];
+                for(int g = 0; g < x; g++){
+                    receiveDatanew[g]=receiveData[g];
+                }
 
                     PDU inPDU = new PDU(receiveData, receiveData.length);
                     //
@@ -64,7 +61,7 @@ public class StreamDread extends Thread {
                             UchNick(inPDU);
                     }
                 }
-                }
+
         } catch (IOException e) {
             e.printStackTrace();
         }catch (Exception e) {
@@ -128,15 +125,8 @@ public class StreamDread extends Thread {
         String oldNick = new String(inPDU.getSubrange(8, inPDU.getByte(1)));
         String newnick = new String(inPDU.getSubrange(8+inPDU.getByte(1), inPDU.getByte(2)));
         Date date = new Date(inPDU.getInt(4)*1000);
-        /*int time2 = (int) inPDU.getInt(4);
-        date.setTime((short)time2*1000);*/
 
         System.out.println(date + " " + oldNick.trim() + " has changed name to " + newnick.trim() + ".");
 
     }
 }
-
-
-
-
-
